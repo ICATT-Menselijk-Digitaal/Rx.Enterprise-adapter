@@ -63,6 +63,10 @@ public static class ServiceCollectionExtensions
             });
     }
 
-    private static string Resolve(string path) =>
-        Path.IsPathRooted(path) ? path : Path.Combine(AppContext.BaseDirectory, path);
+    private static string Resolve(string path)
+    {
+        if (Path.IsPathRooted(path)) return path;
+        var fromCwd = Path.Combine(Directory.GetCurrentDirectory(), path);
+        return File.Exists(fromCwd) ? fromCwd : Path.Combine(AppContext.BaseDirectory, path);
+    }
 }
