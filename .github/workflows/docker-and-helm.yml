@@ -1,0 +1,131 @@
+name: Build & Release Rx.Enterprise Adapter
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/${{ github.repository_owner }}/rx.enterprise-adapter
+  CHART_URL: ghcr.io/${{ github.repository_owner }}
+  SHOULD_PUSH: ${{ github.event_name != 'pull_request' }}
+  SHOULD_RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
+  IS_LATEST: false
+  CHART_NAME: rx-enterprise-adapter
+  VERSION: ""
+  REVISION: ""
+
+permissions:
+  contents: write
+  packages: write
+  attestations: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Find the latest release tag (determined by semver sort)
+        id: latest-semver
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          REPO_URL: ${{ github.event.repository.html_url }}
+          TAG_FILTER: '^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$'
+        run: |
+          TAG=$(\
+            git ls-remote --exit-code --refs --tags --sort='-v:refname' "$REPO_URL" \
+            | awk '{print $2}' | grep -E "$TAG_FILTER" | head -n 1
+          )
+          echo "tag-ref=${TAG}" >> "$GITHUB_OUTPUT"
+          if [ "$TAG" = "${{ github.ref }}" ] ; then
+              echo "IS_LATEST=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Login to GHCR
+        if: ${{ fromJson(env.SHOULD_PUSH) }}
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+        with:
+          flavor: |
+            latest=${{ env.IS_LATEST }}
+          images: |
+            ${{ env.IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Set version and revision in env
+        run: |
+          echo "VERSION=${{ fromJson(env.SHOULD_RELEASE) && fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] || '0.0.0' }}" >> "$GITHUB_ENV"
+          echo "REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}" >> "$GITHUB_ENV"
+
+      - name: Build & push image
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: .
+          platforms: linux/amd64
+          push: ${{ fromJSON(env.SHOULD_PUSH) }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ env.VERSION }}
+            REVISION=${{ env.REVISION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Install Helm
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 # v5.0.0
+        with:
+          version: v3.8.1
+
+      - name: Update chart dependencies
+        working-directory: charts/${{ env.CHART_NAME }}
+        run: helm dependency update
+
+      - name: Test Helm chart
+        working-directory: charts/${{ env.CHART_NAME }}
+        run: |
+          helm template . --debug \
+            --set rxEnterprise.baseUrl="https://example.rx-enterprise.nl" \
+            --set rxEnterprise.cert="dummy-cert" \
+            --set rxEnterprise.privateKey="dummy-key" \
+            --set clients[0].id="kiss" \
+            --set clients[0].secret="change-me-min-16-chars"
+
+      - name: Update chart values with new image tag
+        if: ${{ fromJson(env.SHOULD_RELEASE) }}
+        uses: mikefarah/yq@751d8ad57b84f1794661bc70c0afb92a22ad7b3c # v4.53.2
+        with:
+          cmd: |
+            yq eval '.appVersion = "${{ env.VERSION }}"' -i charts/${{ env.CHART_NAME }}/Chart.yaml
+            yq eval '.version = "${{ env.VERSION }}"' -i charts/${{ env.CHART_NAME }}/Chart.yaml
+            yq eval '.image.tag = "${{ env.VERSION }}"' -i charts/${{ env.CHART_NAME }}/values.yaml
+
+      - name: Push Helm chart to OCI
+        if: ${{ fromJson(env.SHOULD_RELEASE) }}
+        working-directory: charts
+        run: |
+          CHART_URL_LOWERCASE=$(echo "${{ env.CHART_URL }}" | tr '[:upper:]' '[:lower:]')
+          helm package ./${{ env.CHART_NAME }}
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.CHART_URL }} --username ${{ github.actor }} --password-stdin
+          helm push ${{ env.CHART_NAME }}-${{ env.VERSION }}.tgz oci://$CHART_URL_LOWERCASE
+

@@ -19,3 +19,4 @@ obj/
 Thumbs.db
 
 .env
+values.local.yaml

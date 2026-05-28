@@ -1,0 +1,26 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.badgesSection" . }}
+
+## Usage
+
+```bash
+helm upgrade --install rx-enterprise-adapter oci://ghcr.io/icatt/rx-enterprise-adapter \
+  --set rxEnterprise.baseUrl=https://your-rx-enterprise-url \
+  --set rxEnterprise.cert="$(cat client.crt)" \
+  --set rxEnterprise.privateKey="$(cat client.key)" \
+  --set clients[0].secret=your-secret
+```
+
+Mount the cert and key via an existing secret instead:
+
+```bash
+helm upgrade --install rx-enterprise-adapter oci://ghcr.io/icatt/rx-enterprise-adapter \
+  --set existingSecret=my-rx-enterprise-secret
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}

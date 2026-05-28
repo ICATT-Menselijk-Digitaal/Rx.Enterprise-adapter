@@ -1,0 +1,6 @@
+**/.env
+**/certs/
+**/bin/
+**/obj/
+**/.git/
+**/TestResults/

@@ -164,3 +164,20 @@ For `enkelvoudiginformatieobjecten`, the adapter calls `GET /api/zaak-document/s
 | `inhoud` | generated | `{url}/download` |
 
 For downloads, the adapter uses `doelbijlageurl[0]` when present. If absent, falls back to `data/document/{doelsleutel}/{doelbijlagenaam[0]}`.
+
+## Connecting KISS to this adapter
+
+The KISS frontend (`contact-web`) must be configured with the following environment variables to use this adapter instead of OpenZaak. Set them on the `contact-web` deployment in the same Kubernetes namespace:
+
+```bash
+kubectl set env deployment/contact-web -n <namespace> \
+  REGISTERS__0__ZAAKSYSTEEM_ZAKEN_BASE_URL=http://rx-enterprise-adapter/zaken/api/v1 \
+  REGISTERS__0__ZAAKSYSTEEM_CATALOGI_BASE_URL=http://rx-enterprise-adapter/catalogi/api/v1 \
+  REGISTERS__0__ZAAKSYSTEEM_DOCUMENTEN_BASE_URL=http://rx-enterprise-adapter/documenten/api/v1 \
+  REGISTERS__0__ZAAKSYSTEEM_API_CLIENT_ID=<clients[0].id> \
+  REGISTERS__0__ZAAKSYSTEEM_API_KEY=<clients[0].secret> \
+  REGISTERS__0__ZAAKSYSTEEM_DEEPLINK_URL=https://<instance>.rx-enterprise-acc.nl/home/entiteit/zaak/ \
+  REGISTERS__0__ZAAKSYSTEEM_DEEPLINK_PROPERTY=identificatie
+```
+
+For local development, use `http://host.docker.internal:8081` as the base instead of `http://rx-enterprise-adapter`.

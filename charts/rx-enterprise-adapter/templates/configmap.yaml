@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rx-enterprise-adapter.fullname" . }}
+  labels:
+    {{- include "rx-enterprise-adapter.labels" . | nindent 4 }}
+data:
+  ASPNETCORE_ENVIRONMENT: {{ .Values.aspnetcoreEnvironment | quote }}
+  ASPNETCORE_HTTP_PORTS: "8080"
+  RxEnterprise__BaseUrl: {{ .Values.rxEnterprise.baseUrl | quote }}
+  RxEnterprise__CertificatePath: "/app/certs/client.crt"
+  RxEnterprise__PrivateKeyPath: "/app/certs/client.key"
+  {{- range $i, $client := .Values.clients }}
+  CLIENTS__{{ $i }}__ID: {{ $client.id | quote }}
+  {{- end }}

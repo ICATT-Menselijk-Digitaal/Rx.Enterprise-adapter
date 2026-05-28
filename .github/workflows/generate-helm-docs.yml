@@ -1,0 +1,24 @@
+name: Generate Helm documentation
+
+on:
+  pull_request:
+    paths:
+      - "charts/rx-enterprise-adapter/values.yaml"
+      - "charts/rx-enterprise-adapter/Chart.yaml"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Run helm-docs
+        uses: losisin/helm-docs-github-action@3a4528e97c49a5e83de6b78c50c61c8ee5c9f944 # v2.0.0
+        with:
+          git-push: true

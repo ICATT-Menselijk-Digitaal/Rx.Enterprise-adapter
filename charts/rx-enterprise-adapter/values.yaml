@@ -1,0 +1,46 @@
+replicaCount: 1
+
+aspnetcoreEnvironment: "Production"
+
+image:
+  repository: ghcr.io/icatt-menselijk-digitaal/rx.enterprise-adapter
+  pullPolicy: IfNotPresent
+  tag: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# -- Rx.Enterprise connection settings
+rxEnterprise:
+  baseUrl: "https://rheden.connect.rx-enterprise-acc.nl"
+  cert: ""
+  privateKey: ""
+
+# -- Clients allowed to call this proxy (must match KISS-frontend ZAAKSYSTEEM_API_CLIENT_ID / ZAAKSYSTEEM_API_KEY)
+clients:
+  - id: "rx-adapter"
+    # -- Shared secret used to sign and verify JWT tokens; minimum 16 characters
+    secret: "change-me-min-16-chars"
+
+# -- Name of an existing Secret containing rxEnterprise.cert, rxEnterprise.privateKey and client secrets.
+# When set, the chart will not create a Secret of its own.
+existingSecret: ""

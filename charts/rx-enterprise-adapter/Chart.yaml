@@ -1,0 +1,9 @@
+apiVersion: v2
+name: rx-enterprise-adapter
+description: ZGW proxy adapter for Rx.Enterprise — translates Rx.Enterprise case data to ZGW-compatible API responses for KISS-frontend.
+
+type: application
+
+# Chart version and appVersion are updated automatically during a release, leave as is
+version: 0.0.0
+appVersion: 0.0.0
