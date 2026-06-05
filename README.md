@@ -1,6 +1,6 @@
 # Rx.Enterprise-adapter
 
-This is a Dutch local government open source project. It's developed as part of the [Association of Netherlands Municipalities'](https://vng.nl/artikelen/about-the-vng) (VNG) [Common Ground framework](https://commonground.nl/).
+This is a Dutch local government open source project. It's developed as part of the [Association of Netherlands Municipalities](https://vng.nl/artikelen/about-the-vng) (VNG) [Common Ground framework](https://commonground.nl/).
 
 This is an adapter to retrieve information about Zaken in [KISS]([https://github.com/Klantinteractie-Servicesysteem)/ITA from Rx.Enterprise.
 
