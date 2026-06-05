@@ -1,0 +1,47 @@
+publiccodeYmlVersion: 0.5.0
+name: Rx.Enterprise-adapter
+applicationSuite: KISS/ITA
+url: https://github.com/ICATT-Menselijk-Digitaal/Rx.Enterprise-adapter
+platforms:
+  - web
+categories:
+  - customer-service-and-support
+organisation:
+  uri: https://github.com/ICATT-Menselijk-Digitaal
+  name: ICATT
+fundedBy:
+  - name: Rheden municipality
+    uri: https://www.rheden.nl/
+developmentStatus: beta
+softwareType: addon
+intendedAudience:
+  countries:
+    - NL
+description:
+  en:
+    localisedName: Rx.Enterprise-adapter
+    shortDescription: "Adapter to retrieve information about people and businesses
+      in KISS from Rx.Enterprise "
+    longDescription: >-
+      Adapter to retrieve information about Zaken in KISS/ITA from
+      Rx.Enterprise.
+
+      This adapter is a generic standalone application, developed for the
+      municipality Rheden to make people and businesses (Cases) information
+      directly available in KISS (https://www.kiss-klantcontact.nl/).
+    documentation: https://github.com/ICATT-Menselijk-Digitaal/Rx.Enterprise-adapter
+    features:
+      - Makes JSON/HTTPS API calls
+    screenshots:
+      - https://private-user-images.githubusercontent.com/43372165/591876694-dbb481fe-23c6-4ea8-9a7a-a9ae79fd94e9.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODA2NTQwODIsIm5iZiI6MTc4MDY1Mzc4MiwicGF0aCI6Ii80MzM3MjE2NS81OTE4NzY2OTQtZGJiNDgxZmUtMjNjNi00ZWE4LTlhN2EtYTlhZTc5ZmQ5NGU5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjA2MDUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwNjA1VDEwMDMwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWMxODA4YTczYzEwNjhkY2QxN2NlMTNhZWIxNDI2Mzc0OTY1ZmZkNzQzZWU3OTZhZTU1NDMwODRjNDkzMzJlY2YmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JnJlc3BvbnNlLWNvbnRlbnQtdHlwZT1pbWFnZSUyRnBuZyJ9.XD6joZIQymAztZ5hgTJqtpRZ46Da6tj2bqf6IUtWtDg
+legal:
+  license: EUPL-1.2
+maintenance:
+  type: internal
+  contacts:
+    - name: ICATT
+      email: office@icatt.nl
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
