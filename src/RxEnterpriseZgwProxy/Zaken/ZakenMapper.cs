@@ -97,12 +97,22 @@ public static class ZakenMapper
                 OmschrijvingGeneriek = "behandelaar",
                 BetrokkeneIdentificatie = new ZgwNatuurlijkPersoon
                 {
-                    Geslachtsnaam = zaak.Eerstebehandelaar[0],
+                    Geslachtsnaam = string.Join(", ", zaak.Eerstebehandelaar.Select(ExtractDisplayName)),
                 },
             });
         }
 
         return rollen;
+    }
+
+    private static string ExtractDisplayName(string value)
+    {
+        if (!value.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
+            return value;
+
+        var cn = value[3..];
+        var slash = cn.IndexOf('/');
+        return slash >= 0 ? cn[..slash] : cn;
     }
 
     private static string DeriveUuid(string input) =>
