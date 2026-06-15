@@ -87,7 +87,7 @@ Returns two roles. KISS identifies them by `omschrijvingGeneriek`.
 | Role | `omschrijvingGeneriek` | Rx.Enterprise source |
 | --- | --- | --- |
 | Aanvrager | `initiator` | `voornamenafzender`, `voorvoegselafzender`, `voorlettersafzender` |
-| Behandelaar | `behandelaar` | `eerstebehandelaar[0]` → mapped to `geslachtsnaam` |
+| Behandelaar | `behandelaar` | `eerstebehandelaar[]` → all entries joined as `geslachtsnaam`; AD/LDAP entries (`CN=Name/OU=…`) are reduced to their `CN` value |
 
 Both roles use `betrokkeneType: "natuurlijk_persoon"`.
 
