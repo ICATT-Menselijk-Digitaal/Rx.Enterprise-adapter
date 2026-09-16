@@ -14,7 +14,7 @@ internal sealed partial class RxEnterpriseClient(HttpClient httpClient) : IRxEnt
         var response = await httpClient.GetAsync($"data/zaak?search={Uri.EscapeDataString(query)}", ct);
         await EnsureSuccess(response, ct);
         var json = Sanitize(await response.Content.ReadAsStringAsync(ct));
-        // Rx.Enterprise answers a search without hits with 200 and an empty body.
+        // Rx.Enterprise answers a search term shorter than 5 characters with 200 and an empty body.
         if (string.IsNullOrWhiteSpace(json)) return [];
         return UnwrapZaken(JsonNode.Parse(json));
     }
