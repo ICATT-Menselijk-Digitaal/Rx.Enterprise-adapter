@@ -36,8 +36,9 @@ public static class ZakenEndpoints
             CancellationToken ct) =>
         {
             var baseUrl = $"{request.Scheme}://{request.Host}";
-            var selfUrl = $"{baseUrl}/zaken/api/v1/zaken/{id}";
-            var zaak = await rxClient.GetZaakAsync(id, ct);
+            var sleutel = ZaakUuid.ToSleutel(id);
+            var selfUrl = $"{baseUrl}/zaken/api/v1/zaken/{sleutel}";
+            var zaak = await rxClient.GetZaakAsync(sleutel, ct);
             return Results.Ok(ZakenMapper.ToZgwZaak(zaak, selfUrl, baseUrl));
         });
 
@@ -47,7 +48,7 @@ public static class ZakenEndpoints
             CancellationToken ct) =>
         {
             var zaakUrl = request.Query["zaak"].FirstOrDefault() ?? string.Empty;
-            var zaakId = zaakUrl.TrimEnd('/').Split('/').LastOrDefault() ?? string.Empty;
+            var zaakId = ZaakUuid.ToSleutel(zaakUrl.TrimEnd('/').Split('/').LastOrDefault() ?? string.Empty);
 
             if (string.IsNullOrEmpty(zaakId))
                 return Results.Ok(ZakenMapper.ToPaginatedResult(Array.Empty<ZgwRol>()));
@@ -80,7 +81,7 @@ public static class ZakenEndpoints
         {
             var baseUrl = $"{request.Scheme}://{request.Host}";
             var zaakUrl = request.Query["zaak"].FirstOrDefault() ?? string.Empty;
-            var zaakId = zaakUrl.TrimEnd('/').Split('/').LastOrDefault() ?? string.Empty;
+            var zaakId = ZaakUuid.ToSleutel(zaakUrl.TrimEnd('/').Split('/').LastOrDefault() ?? string.Empty);
 
             if (string.IsNullOrEmpty(zaakId))
                 return Results.Ok(Array.Empty<ZgwZaakInformatieObject>());

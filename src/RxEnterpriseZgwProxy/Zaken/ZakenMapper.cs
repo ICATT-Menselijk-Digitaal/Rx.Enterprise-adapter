@@ -16,7 +16,7 @@ public static class ZakenMapper
     public static ZgwZaak ToZgwZaak(RxZaak zaak, string selfUrl, string baseUrl) => new()
     {
         Url = selfUrl,
-        Uuid = zaak.Sleutel ?? string.Empty,
+        Uuid = ZaakUuid.FromSleutel(zaak.Sleutel),
         Identificatie = zaak.Sleutel ?? string.Empty,
         Omschrijving = zaak.Betreft ?? string.Empty,
         Bronorganisatie = string.Empty,

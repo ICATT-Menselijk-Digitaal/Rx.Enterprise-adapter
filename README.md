@@ -71,6 +71,7 @@ GET /zaken/api/v1/zaken/{id}
 
 | KISS/ZGW field | Rx.Enterprise field | Notes |
 | --- | --- | --- |
+| `uuid` | `sleutel` | GUID waarin de sleutel omkeerbaar is verpakt (ZGW-clients zoals ITA parsen `uuid` als GUID). `GET /zaken/{id}` en `?zaak=<url>` accepteren die GUID én de kale sleutel. Sleutels langer dan 14 bytes worden ongewijzigd teruggegeven. |
 | `identificatie` | `sleutel` | |
 | `omschrijving` | `betreft` | |
 | `zaaktype` | `zaaktypesleutel` | URL: `/catalogi/api/v1/zaaktypen/{base64(zaaktypesleutel)}` |
