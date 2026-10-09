@@ -1,5 +1,11 @@
 # Rx.Enterprise-adapter
 
+> [!WARNING]
+> **This repository is no longer used or maintained.** The Rx.Enterprise adapter has moved to [`Rx.Enterprise-adapter/` in Rheden-Adapters](https://github.com/ICATT-Menselijk-Digitaal/Rheden-Adapters/tree/main/Rx.Enterprise-adapter), together with the openPDC and Smoelenboek adapters. Open new issues and pull requests there.
+>
+> The image and Helm chart addresses (`ghcr.io/icatt-menselijk-digitaal/rx.enterprise-adapter` and `ghcr.io/icatt-menselijk-digitaal/charts/rx-enterprise-adapter`) stay the same. Versions `1.7.0` and later are built from Rheden-Adapters; `0.1.2` was the last release from this repository.
+>
+
 This is a Dutch local government open source project. It's developed as part of the [Association of Netherlands Municipalities](https://vng.nl/artikelen/about-the-vng) (VNG) [Common Ground framework](https://commonground.nl/).
 
 This is an adapter to retrieve information about Zaken in [KISS](https://github.com/Klantinteractie-Servicesysteem)/ITA from Rx.Enterprise.
